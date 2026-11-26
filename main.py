@@ -3,20 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker, declarative_base
 
 
-Base = declarative_base()
+from database import engine, Base, get_db
+from models import Project
+from schemas import ProjectCreate
 
-from sqlalchemy import Column, Integer, String
+Base.metadata.create_all(bind=engine)
 
 
-
-class Project(Base):
-    __tablename__ = 'projects'
-    id = Column(Integer,primary_key=True, index=True)
-    title = Column(String)
-    tag = Column(String)
 
 
 
@@ -30,35 +25,6 @@ templates = Jinja2Templates(directory="templates")
 
 # App Routes
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-
-DB_URL = 'postgresql://f-18@localhost:5432/postgres'
-engine = create_engine(DB_URL)
-
-SessionLocal = sessionmaker(bind=engine,autoflush=False, autocommit=False)
-
-
-
-# App Model
-
-Base.metadata.create_all(bind=engine)
-
-
-
-def get_db() :
-    db = SessionLocal()
-    try : 
-        yield db
-    finally : 
-        db.close()
-
-
-from pydantic import BaseModel
-
-class ProjectCreate(BaseModel):
-    title : str
-    tag : str
 
 @app.post('/projects')
 def create_project(project : ProjectCreate, db : Session = Depends(get_db)):
@@ -76,7 +42,9 @@ async def home(request : Request, db : Session = Depends(get_db)):
         }
         
     )
-    
+
+
+
 
 
 
