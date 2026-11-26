@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from typing import Annotated
 
 
 from database import engine, Base, get_db
@@ -43,11 +44,18 @@ async def home(request : Request, db : Session = Depends(get_db)):
         
     )
 
-@app.get('login',response_class=HTMLResponse)
+@app.get('/login',response_class=HTMLResponse)
 async def login(request : Request):
     return templates.TemplateResponse(
         request=request, name='login.html'
     )
+
+@app.post('/ask_login')
+async def ask_login(username : Annotated[str, Form()], password : Annotated[str, Form()]):
+    return {
+        'username' : username
+    }
+
 
 
 
