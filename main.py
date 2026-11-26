@@ -10,6 +10,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+# App Routes
 
 @app.get('/', response_class=HTMLResponse)
 async def home(request : Request):
