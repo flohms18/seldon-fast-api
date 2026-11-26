@@ -43,6 +43,13 @@ async def home(request : Request, db : Session = Depends(get_db)):
         
     )
 
+@app.get('login',response_class=HTMLResponse)
+async def login(request : Request):
+    return templates.TemplateResponse(
+        request=request, name='login.html'
+    )
+
+
 
 
 
