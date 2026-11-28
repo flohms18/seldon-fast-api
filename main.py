@@ -8,6 +8,7 @@ from typing import Annotated
 
 from database import engine, Base, get_db
 from models import Project
+from models import User
 from schemas import ProjectCreate
 
 Base.metadata.create_all(bind=engine)
@@ -55,8 +56,6 @@ async def ask_login(username : Annotated[str, Form()], password : Annotated[str,
     return {
         'username' : username
     }
-
-
 
 
 
